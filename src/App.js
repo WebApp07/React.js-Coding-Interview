@@ -1,16 +1,29 @@
-import React from "react";
-import "./index.css";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const App = () => {
-  const [count, setCount] = useState(0);
+  const [randomUserDataJson, setRandomUserDataJson] = useState("");
+
+  const fetchRandomData = async () => {
+    return axios
+      .get("https://randomuser.me/api")
+      .then(function ({ data }) {
+        return JSON.stringify(data, null, 2);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchRandomData().then((randomData) => {
+      setRandomUserDataJson(randomData);
+    });
+  }, []);
 
   return (
-    <div class="center">
-      <h1 class="title">Counter App</h1>
-      <p class="desc">You cliked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>Increment </button>
-      <button onClick={() => setCount(count - 1)}>Decrement </button>
+    <div>
+      <pre>{randomUserDataJson}</pre>
     </div>
   );
 };
